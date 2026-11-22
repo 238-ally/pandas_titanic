@@ -21,6 +21,9 @@ print(s['Sex'].value_counts())
 print("---------------------------")
 print(s['Age'].describe())
 
+
+
+
 print("****************************")
 #-------生还率与性别,舱位,年龄有什么关系吗--------
 m=s.groupby("Sex")["Survived"].mean()
@@ -47,6 +50,9 @@ print(m)
 print("-----------------------------")
 print(m[['PassengerId','Sex','Age']])
 print('------------------------------------')
+
+
+
 #---女性生存率高与仓位,年龄,性别有关系吗--------
 m=mm.groupby(['Sex','CabinGroup'])['Survived'].mean()
 print(m)
@@ -54,9 +60,10 @@ print('------------------------------------')
 m=s.groupby(['AgeGroup','Sex'])['Survived'].mean()
 print(m)
 print('---------------------------------***')
+
+
+
 #------------甲板,舱位对生还率影响的占比'
-#1等舱位分析各甲板对生还率的影响
-#print(mm.info())
 for i in range(1,4):
     m=mm[mm['Pclass']==i].groupby(['CabinGroup']).agg(
         生还率=("Survived","mean"),
@@ -64,3 +71,26 @@ for i in range(1,4):
         平均年龄=("Age",'mean'),
     )
     print(m)
+
+#------------ 男女生存率差异大都原因分析
+m=s.groupby('Sex').agg(
+    平均年龄=('Age','mean'),
+    中位数=('Age','median'),
+    最大年龄=('Age','max'),
+)
+print(m)
+print('--------------------------------')
+m=s.groupby(['Sex','Pclass']).size();
+print(m)
+print('----------------------------')
+print(m)
+m=s.groupby('Pclass')['Survived'].mean()
+print(m)
+m=mm.groupby(['Sex','CabinGroup']).size()
+print(m)
+
+
+#--------------------清洗数据----------------
+s2=s.copy()
+s['Age']=s['Age'].fillna(s['Age'].median())
+print(s['Age'].isna().sum())
