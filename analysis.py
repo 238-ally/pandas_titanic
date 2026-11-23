@@ -92,5 +92,23 @@ print(m)
 
 #--------------------清洗数据----------------
 s2=s.copy()
+#缺失值
 s['Age']=s['Age'].fillna(s['Age'].median())
 print(s['Age'].isna().sum())
+print('-----------------------------')
+
+s['HasCabin']=s['Cabin'].notna()
+m1=s.groupby('HasCabin')['Survived'].mean()
+print(m1)
+m2=s.groupby(['HasCabin','Sex'])['Survived'].mean()
+print(m2)
+s['Embarked']=s['Embarked'].fillna(s['Embarked'].mode()[0])
+
+#重复值
+print("完全重复行:",s.duplicated().sum())
+print("姓名重复: ",s['Name'].duplicated().sum())
+
+#矛盾情况
+print(s[(s['Fare']<10) & (s['Pclass']==1)])
+
+#---------------验证
